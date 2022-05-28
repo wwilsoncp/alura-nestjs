@@ -29,8 +29,8 @@ export class LivrosController {
     this.livrosService.criar(livro);
   }
 
-  @Put(':id')
-  async alterar(@Param() params, @Body() livro: Livro): Promise<[number]> {
+  @Put()
+  async alterar(@Body() livro: Livro): Promise<[number, Livro[]]> {
     return this.livrosService.alterar(livro);
   }
 
