@@ -1,32 +1,32 @@
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/sequelize';
 import { Livro } from './livro.model';
 
 @Injectable()
 export class LivrosService {
-  private readonly livros: Livro[] = [
-    new Livro('LIVRO1', 'Livro Java', 29.9),
-    new Livro('LIVRO2', 'Livro JavaScript', 39.9),
-    new Livro('LIVRO3', 'Livro Angular', 49.9),
-    new Livro('LIVRO4', 'Livro Nestjs', 49.9),
-  ];
+  private readonly livros: Livro[] = [];
 
-  obterTodos(): Livro[] {
-    return this.livros;
+  // solicitando ao sequeliza que injete o modelo Livro
+  constructor(@InjectModel(Livro) private livroModel: typeof Livro) {}
+
+  async obterTodos(): Promise<Livro[]> {
+    return this.livroModel.findAll();
   }
 
-  obterUm(id: number): Livro {
-    return this.livros[0];
+  async obterUm(id: number): Promise<Livro> {
+    return this.livroModel.findByPk(id);
   }
 
-  criar(livro: Livro): void {
-    this.livros.push(livro);
+  async criar(livro: Livro): Promise<void> {
+    this.livroModel.create(livro);
   }
 
-  alterar(livro: Livro): Livro {
-    return livro;
+  async alterar(livro: Livro): Promise<[number]> {
+    return this.livroModel.update(livro, { where: { id: livro.id } });
   }
 
-  apagar(id: number): void {
-    this.livros.pop();
+  async apagar(id: number): Promise<void> {
+    const livro: Livro = await this.obterUm(id);
+    if (livro) livro.destroy();
   }
 }
