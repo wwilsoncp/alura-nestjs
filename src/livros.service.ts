@@ -31,14 +31,6 @@ export class LivrosService {
     });
   }
 
-  //   async alterar(livro: Livro): Promise<[number, Livro[]]> {
-  //     return this.livroModel.update(livro, {
-  //         where: {
-  //             id: livro.id
-  //         }
-  //     });
-  // }
-
   async apagar(id: number): Promise<void> {
     const livro: Livro = await this.obterUm(id);
     if (livro) livro.destroy();
